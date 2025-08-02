@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }) {
 
       <nav className="space-y-2">
         {/* Main Links */}
-        <NavLink to="/dashboard" className="block hover:bg-slate-700 px-3 py-2 rounded">
+        <NavLink to="/dashboard" className="block hover:bg-slate-700 px-3 py-2 rounded bg-red-700">
           Dashboard
         </NavLink>
         <NavLink to="/users" className="block hover:bg-slate-700 px-3 py-2 rounded">
