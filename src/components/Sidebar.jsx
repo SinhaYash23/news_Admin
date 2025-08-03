@@ -1,28 +1,36 @@
-// src/components/Sidebar.jsx
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
+import { FaTachometerAlt, FaUsers, FaNewspaper, FaFileAlt, FaPenNib, FaCog, FaSignOutAlt } from 'react-icons/fa';
+
+const navItems = [
+  { to: '/dashboard', label: 'Dashboard', icon: <FaTachometerAlt /> },
+  { to: '/users', label: 'Users', icon: <FaUsers /> },
+  { to: '/news', label: 'News', icon: <FaNewspaper /> },
+  { to: '/articles', label: 'Articles', icon: <FaFileAlt /> },
+  { to: '/blogs', label: 'Blogs', icon: <FaPenNib /> },
+  { to: '/settings', label: 'Settings', icon: <FaCog /> },
+  { to: '/logout', label: 'Logout', icon: <FaSignOutAlt /> },
+];
 
 export default function Sidebar() {
-  const { pathname } = useLocation();
-  const navItem = (to, label) => (
-    <Link
-      to={to}
-      className={`block px-6 py-3 hover:bg-blue-200 rounded ${
-        pathname === to ? "bg-blue-500 text-white" : "text-gray-800"
-      }`}
-    >
-      {label}
-    </Link>
-  );  
-
   return (
-    <aside className="w-64 bg-white shadow h-full fixed z-10">
-      <div className="p-6 font-bold text-xl text-blue-600">Admin Panel</div>
-      <nav className="flex flex-col gap-1">
-        {navItem("/dashboard", "Dashboard")}
-        {navItem("/articles", "Articles")}
-        {navItem("/blogs", "Blogs")}
-        {navItem("/users", "Users")}
-      </nav>
-    </aside>
+    <nav className="flex flex-col h-full p-6 space-y-4">
+      <h2 className="text-2xl font-bold mb-6">Admin</h2>
+      {navItems.map(({ to, label, icon }) => (
+        <NavLink
+          key={to}
+          to={to}
+          className={({ isActive }) =>
+            `flex items-center px-4 py-2 rounded-lg transition-colors ${
+              isActive
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+            }`
+          }
+        >
+          <span className="text-lg mr-3">{icon}</span>
+          <span className="font-medium">{label}</span>
+        </NavLink>
+      ))}
+    </nav>
   );
 }

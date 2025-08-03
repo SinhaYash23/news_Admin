@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -26,6 +27,9 @@ import 'primeicons/primeicons.css';
 
 
 export default function App() {
+
+
+  const queryClient = new QueryClient();
   return (
     <BrowserRouter>
       <Routes>
