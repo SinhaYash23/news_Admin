@@ -1,45 +1,100 @@
-// src/pages/EditProfile.jsx
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function EditProfile() {
   const [formData, setFormData] = useState({
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
-    role: "Administrator",
+    name: "",
+    email: "",
+    role: "",
+    avatar: null,
   });
+  const [avatarPreview, setAvatarPreview] = useState("");
 
-  const [avatarPreview, setAvatarPreview] = useState("https://i.pravatar.cc/150?img=47");
+  // Fetch user profile on mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch("https://api.yashsinha.online/api/auth/profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
+        const json = await res.json();
+        if (json.success) {
+          const user = json.data.user;
+          setFormData({
+            name: user.name || "",
+            email: user.email || "",
+            role: user.role || "",
+            avatar: null,
+          });
+          setAvatarPreview(user.profilePicture || "");
+        } else {
+          alert("Failed to fetch user profile");
+        }
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
     if (name === "avatar" && files[0]) {
       const reader = new FileReader();
-      reader.onloadend = () => setAvatarPreview(reader.result);
+      reader.onload = () => setAvatarPreview(reader.result);
       reader.readAsDataURL(files[0]);
+
+      setFormData((prev) => ({ ...prev, avatar: files[0] }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSubmit = (e) => {
+  // Submit updated data
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit logic here
-    console.log("Updated Profile:", formData);
+    const token = localStorage.getItem("token");
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    if (formData.avatar) data.append("avatar", formData.avatar);
+
+    try {
+      const response = await fetch("https://api.yashsinha.online/api/auth/profile", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: data,
+      });
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Failed to update profile");
+
+      alert("Profile updated successfully!");
+      console.log("Updated Profile:", result);
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Profile update failed");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex justify-center items-center">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg space-y-6"
-      >
+      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg space-y-6">
         <h2 className="text-2xl font-semibold text-gray-800 text-center">Edit Profile</h2>
 
         <div className="flex justify-center">
           <div className="relative group">
             <img
-              src={avatarPreview}
+              src={avatarPreview || "https://i.pravatar.cc/150?u=default"}
               alt="Profile Preview"
               className="w-24 h-24 rounded-full border-4 border-teal-500 object-cover"
             />
@@ -75,24 +130,19 @@ export default function EditProfile() {
               name="email"
               value={formData.email}
               disabled
-              onChange={handleChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Role</label>
-            <select
+            <input
+              type="text"
               name="role"
               value={formData.role}
-              onChange={handleChange}
               disabled
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-            >
-              <option>Administrator</option>
-              <option>Editor</option>
-              <option>Viewer</option>
-            </select>
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            />
           </div>
         </div>
 
