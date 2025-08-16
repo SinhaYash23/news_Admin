@@ -41,7 +41,7 @@ const AddUser = () => {
       alert(error.response?.data?.message || 'Something went wrong. Please try again.');
     }
   };
-
+// News
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
       <form
