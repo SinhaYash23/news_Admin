@@ -5,22 +5,21 @@ import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { motion } from "framer-motion";
 
-export default function NewsManagement() {
+export default function ArticleManagement() {
   const navigate = useNavigate();
   const toast = useRef(null);
   const [showDialog, setShowDialog] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
 
   const actions = [
-    { label: "Add News", icon: "pi pi-plus", path: "/add-news" },
-    { label: "View Profile", icon: "pi pi-user", path: "/view-profile" },
-    { label: "Edit News", icon: "pi pi-pencil", path: "/edit-news" },
-    { label: "Publish News", icon: "pi pi-upload", path: "/news/publish-news" },
-    { label: "Latest News", icon: "pi pi-clock", path: "/news/latest-news" },
-    { label: "Delete News", icon: "pi pi-trash", path: "/news/delete-news" },
+    { label: "Add Article", icon: "pi pi-plus", path: "/articles/add" },
+    { label: "Edit Article", icon: "pi pi-pencil", path: "/articles/edit" },
+    { label: "View Article Details", icon: "pi pi-eye", path: "/articles/view" },
+    { label: "Delete Article", icon: "pi pi-trash", path: "/articles/delete" },
+    { label: "Publish Article", icon: "pi pi-upload", path: "/articles/publish" },
   ];
 
-  const handleTileClick = (action) => {
+  const handleActionClick = (action) => {
     setSelectedAction(action);
     setShowDialog(true);
   };
@@ -28,8 +27,8 @@ export default function NewsManagement() {
   const confirmAction = () => {
     toast.current.show({
       severity: "success",
-      summary: "Navigation Confirmed",
-      detail: `Going to ${selectedAction.label}`,
+      summary: "Action Confirmed",
+      detail: `Navigating to ${selectedAction.label}`,
       life: 2000,
     });
 
@@ -41,7 +40,7 @@ export default function NewsManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4 py-10 flex justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-100 px-4 py-10 flex justify-center items-center">
       <Toast ref={toast} />
       <Dialog
         header="Confirm Navigation"
@@ -87,7 +86,7 @@ export default function NewsManagement() {
         className="w-full max-w-5xl bg-white/30 backdrop-blur-md rounded-2xl shadow-xl p-10 border border-white/40"
       >
         <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-10">
-          📰 News Management Dashboard
+          📚 Article Management
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -96,11 +95,11 @@ export default function NewsManagement() {
               key={index}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex flex-col items-center justify-center bg-white hover:bg-blue-100 border border-gray-200 shadow-md rounded-xl py-6 transition-all duration-300 cursor-pointer"
-              onClick={() => handleTileClick(action)}
+              className="flex flex-col items-center justify-center bg-white hover:bg-teal-100 border border-gray-200 shadow-md rounded-xl py-6 transition-all duration-300 cursor-pointer"
+              onClick={() => handleActionClick(action)}
             >
               <i
-                className={`${action.icon} text-3xl text-blue-600 mb-3`}
+                className={`${action.icon} text-3xl text-teal-600 mb-3`}
                 style={{ fontSize: "2rem" }}
               ></i>
               <span className="text-lg font-semibold text-gray-700">

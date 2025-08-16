@@ -1,53 +1,33 @@
-import { useState } from 'react';
-import React from 'react';
-import { FaChevronDown } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
-export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+function Navbar() {
+  const [user, setUser] = useState(null);
 
-  React.useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode);
-  }, [darkMode]);
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (err) {
+      console.error('Error parsing user from localStorage:', err);
+    }
+  }, []);
 
   return (
-    <div className="flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-      <h1 className="text-xl font-semibold">Welcome Admin</h1>
-      <div className="flex items-center space-x-4">
-        <button
-          onClick={() => setDarkMode(prev => !prev)}
-          className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-        >
-          {darkMode ? 'Light Mode' : 'Dark Mode'}
+    <div className="flex justify-end p-4">
+      <div className="relative">
+        <button className="bg-blue-600 text-white px-4 py-2 rounded">
+          Hi {user?.name || 'User'} ▼
         </button>
-
-        <div className="relative">
-          <button
-            onClick={() => setMenuOpen(prev => !prev)}
-            className="flex items-center space-x-1 px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            <span>Hi User</span>
-            <FaChevronDown className={`${menuOpen ? 'rotate-180' : ''} transition-transform`} />
-          </button>
-
-          {menuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg divide-y divide-gray-200 dark:divide-gray-700">
-              <NavLink
-                to="/view-profile"
-                className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >View Profile</NavLink>
-              <NavLink
-                to="/edit-profile"
-                className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >Edit Profile</NavLink>
-              <NavLink
-                to="/change-password"
-                className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >Change Password</NavLink>
-            </div>
-          )}
-        </div>
+        {/* Optional dropdown menu */}
+        {/* <div className="absolute right-0 mt-2 w-40 bg-white rounded shadow-lg">
+          <a href="/profile" className="block px-4 py-2 hover:bg-gray-100">View Profile</a>
+          <a href="/logout" className="block px-4 py-2 hover:bg-gray-100">Logout</a>
+        </div> */}
       </div>
     </div>
   );
 }
+
+export default Navbar;

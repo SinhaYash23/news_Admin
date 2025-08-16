@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }) {
       <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
         <Sidebar />
       </div>
-
+                                                                                                                    
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-auto">
         {/* Navbar */}
